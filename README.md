@@ -16,7 +16,7 @@
 4. AWS에서 하루 한 번 수집하고 작업 후 서버를 중지하도록 자동화합니다.
 5. 게시글 수집을 완성한 뒤 댓글 수집·갱신으로 확장합니다.
 
-현재는 기획 문서와 uv 기반 Python 환경을 준비한 단계입니다. 크롤링 코드와 Docker·AWS 배포는 아직 구현하지 않았습니다.
+현재는 `crawl_test.py`로 PC 목록 한 페이지의 HTML 확보·샘플 파싱·JSON 저장을 구현한 단계입니다. 본문·댓글·DB와 Docker·AWS 배포는 아직 구현하지 않았습니다.
 
 ## 개발 환경
 
@@ -33,6 +33,20 @@ uv run python --version
 ```
 
 가상환경을 따로 활성화하지 않아도 `uv run`으로 실행할 수 있습니다. `.venv`는 컴퓨터마다 새로 만들고, `pyproject.toml`, `uv.lock`, `.python-version`을 공유합니다.
+
+## 첫 테스트 실행
+
+```bash
+uv run crawl_test.py
+```
+
+기본은 `sample` 모드이며 `samples/nasdaq_list.html`과 응답 메타데이터를 읽습니다. 샘플은 Git에 포함하지 않으므로 새 컴퓨터에서는 먼저 코드 상단의 `RUN_MODE`를 `"capture"`로 바꿔 한 번 확보하고, 다시 `"sample"`로 바꿔 반복 검증합니다. `"live"`는 새 응답을 파싱하며 HTML을 저장하지 않습니다. 샘플이 없으면 자동으로 웹에 요청하지 않습니다.
+
+추출 결과는 터미널과 `output/`의 JSON에서 확인할 수 있습니다. 네트워크 없는 합성 예제 검증은 다음 명령으로 실행합니다.
+
+```bash
+uv run python -m unittest discover -s tests -v
+```
 
 ## 문서
 

@@ -4,7 +4,7 @@
 
 **고정된 나스닥 갤러리 PC 목록 첫 페이지의 HTML을 한 번 확보·저장하고, 이후에는 그 샘플을 읽어 게시글 정보를 추출한다.** 파서 검증 후 입력을 실제 HTTP 응답으로 바꿔 연결한다. 요청과 파싱은 한 Python 파일 안의 별도 함수로 나누며, 사용자 URL 입력·PC/모바일 선택·상세 본문 방문은 이후 단계로 옮긴다.
 
-- 구현 파일: `crawl_test.py` 하나. 아직 코드를 구현하지 않은 계획이다.
+- 구현 파일: `crawl_test.py` 하나. capture·sample·live 모드를 구현했다.
 - 실행: 추가 옵션 없이 `python crawl_test.py`.
 - 기본 주소: `https://gall.dcinside.com/mgallery/board/lists/?id=nasdaq&page=1`.
 - 핵심 기술: Python, requests, BeautifulSoup, 표준 urllib.parse·json·datetime·pathlib.
@@ -182,7 +182,11 @@ RUN_MODE = "sample"  # capture / sample / live
 5. sample 모드에서 출력·JSON 저장, 제외·중복·오류 처리 검증.
 6. live 모드에 같은 파서를 연결하고 새 응답을 대조.
 
-첫 구현을 시작할 설계는 준비됐다. 다만 **실제 HTML 샘플과 선택자는 아직 확보·검증되지 않았다.** 이 확인을 첫 개발 작업으로 수행하며 설계가 준비됐다는 사실과 실사이트 수집이 검증됐다는 사실을 구분한다.
+2026-10-04 실제 HTML을 한 번 확보하고 선택자를 확인했다. 해당 샘플은 일반 글 45개, 제외 행 9개, 파싱 오류 0개로 처리됐다. 자동 검증 8개는 합성 HTML·임시 파일·모의 HTTP 응답으로 수행한다. 현재 결과는 이 샘플과 테스트 사례에 한정되며 이후 사이트 구조 변경에 대한 보장을 뜻하지 않는다.
+
+확인한 선택자는 `table.gall_list`, `tbody > tr.ub-content`, `td.gall_num`, `td.gall_subject`, `td.gall_tit`, `td.gall_date`, `td.gall_count`, `td.gall_recommend`다. 공지는 `data-type="icon_notice"`, 광고·설문은 말머리와 아이콘으로 제외한다. 제목의 댓글 수 링크는 `.reply_numbox`로 구분한다.
+
+명시적인 빈 목록 화면은 아직 관찰하지 않았으므로 0건 결과는 정상 성공으로 처리하지 않고 확인을 요청한다. capture는 응답을 저장한 뒤 목록 확인을 위해 파서를 실행하지만 결과 JSON은 저장하지 않는다. sample·live에서만 추출 JSON을 저장한다.
 
 ## 8. 후속 확장 순서
 
@@ -199,5 +203,5 @@ URL 외부 입력과 모바일 비교는 필요가 생겼을 때 추가한다. �
 - 첫 페이지에는 실행 시점의 일부 글만 있다. 전체 수집이나 누락 없는 수집을 보장하지 않는다.
 - 이 단계의 조회수·추천수는 목록을 읽은 시점의 값이며 이후 변화는 추적하지 않는다.
 - requests 응답에 필요한 HTML이 실제로 포함되는지는 구현 시 확인한다.
-- 이번 변경은 전략 문서에만 적용되며 코드·Docker 이미지·AWS 자원은 만들지 않는다.
+- Python 코드와 검증을 구현했다. Docker 이미지·AWS 자원은 만들지 않았다.
 - 실사이트 요청은 [전체 기획서의 수집 정책 검토](PROJECT_PLAN.md)를 따른다. 로컬 합성 HTML로도 파싱·저장 테스트를 먼저 진행할 수 있다.
