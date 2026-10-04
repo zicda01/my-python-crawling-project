@@ -1,0 +1,60 @@
+# Python virtual environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Collected HTML, generated results, and runtime data (project root)
+/samples/
+/output/
+/data/
+/logs/
+*.log
+*.sqlite
+*.sqlite3
+*.db
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Local secrets and cloud credentials
+.env
+.env.*
+!.env.example
+!.env.*.example
+.aws/
+*.pem
+*.key
+.streamlit/secrets.toml
+
+# macOS and Windows files
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini
+
+# Local editor files
+.idea/
+*.swp
+*.swo
+*~
+
+# Track pyproject.toml, uv.lock, .python-version, docs, and source code.
+# Keep synthetic test fixtures in tests/fixtures/, outside samples/.
